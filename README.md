@@ -1,3 +1,11 @@
-# Futbol
+# **Turing BE 2305 Group Project**
 
-Starter repository for the [Turing School](https://turing.io/) Futbol project.
+**Project Name:**
+    Futbol
+
+**Contributors:** Matt Lim, Ian Lyell, Parker Boeing, Dylan Timmons
+
+## Table of Contents 
+    - Establishing Group Norms Qestions
+    - Links to DTR and Project Board
+    - LinkedIn Team info 
