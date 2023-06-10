@@ -3,12 +3,24 @@
 **Project Name:**
     Futbol
 
-**Contributors:** Matt Lim, Ian Lyell, Parker Boeing, Dylan Timmons
+**Contributors:** 
+
+Parker Boeing - https://www.linkedin.com/in/parker-boeing-041b0267/
+                https://github.com/ParkerBoeing
+
+Matthew Lim - https://www.linkedin.com/in/matthew-lim-va/
+              https://github.com/MatthewTLim
+
+Ian Lyell - https://www.linkedin.com/in/ian-lyell-1a7479279/
+            https://github.com/ILyell
+
+Dylan Timmons - https://www.linkedin.com/in/dylan-timmons-7264a116b/
+                https://github.com/DylanScotty
 
 ## Table of Contents 
     - Establishing Group Norms Qestions
     - Links to DTR and Project Board
-    - LinkedIn Team info 
+    - Project Reflection Questions
 
 ## Group Norms
 1. Daily checkins with a retro on friday. 
