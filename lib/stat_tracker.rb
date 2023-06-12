@@ -374,6 +374,38 @@ end
     calc_percentage(wins, games_played)
   end
 
+  def most_goals_scored(team_id)
+    games_played_by_team = [] 
+    most_away_goals = 0
+    most_home_goals = 0
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_played_by_team.each do |game|
+      if game.away_team_id == team_id && game.away_goals.to_i > most_away_goals
+        most_away_goals = game.away_goals.to_i
+      elsif game.home_team_id == team_id && game.home_goals.to_i > most_home_goals
+        most_home_goals = game.home_goals.to_i
+      else
+      end
+    end
+    most_home_goals > most_away_goals ? most_home_goals : most_away_goals
+  end
+
+  def fewest_goals_scored(team_id)
+    games_played_by_team = [] 
+    fewest_away_goals = Float::INFINITY
+    fewest_home_goals = Float::INFINITY
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_played_by_team.each do |game|
+      if game.away_team_id == team_id && game.away_goals.to_i < fewest_away_goals
+        fewest_away_goals = game.away_goals.to_i
+      elsif game.home_team_id == team_id && game.home_goals.to_i < fewest_home_goals
+        fewest_home_goals = game.home_goals.to_i
+      else
+      end
+    end
+    fewest_home_goals < fewest_away_goals ? fewest_home_goals : fewest_away_goals
+  end
+
   #------------------------------Helper Methods---------------------------------
 
   def find_average(smaller_hash, larger_hash)
