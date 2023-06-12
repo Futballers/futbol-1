@@ -478,7 +478,7 @@ end
       end
     end
     average_win_percentage = find_average(wins_against_opponents, games_against_opponents)
-    p average_win_percentage
+    average_win_percentage
   end
 
   def worst_loss(team_id)

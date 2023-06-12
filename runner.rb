@@ -11,4 +11,4 @@ locations = {
 stat_tracker = StatTracker.new(locations)
 
 
-stat_tracker.worst_loss("16")
+stat_tracker.seasonal_summary("16")
