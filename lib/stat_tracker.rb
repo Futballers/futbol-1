@@ -107,15 +107,13 @@ class StatTracker
   def best_offense
     average_goals_by_team
     highest_scoring_team = average_goals_by_team.max_by {|team, avg_goals| avg_goals}
-    @teams.each {|team| return highest_scoring_team_name = team.team_name if team.team_id == highest_scoring_team[0]}
-    highest_scoring_team_name
+    team_identifier(highest_scoring_team[0])
   end
 
   def worst_offense
     average_goals_by_team
     lowest_scoring_team = average_goals_by_team.min_by {|team, avg_goals| avg_goals}
-    @teams.each {|team| return lowest_scoring_team_name = team.team_name if team.team_id == lowest_scoring_team[0]}
-    lowest_scoring_team_name
+    team_identifier(lowest_scoring_team[0])
   end
 
   def average_goals_by_team
@@ -144,8 +142,7 @@ class StatTracker
       end
     end
     lowest_scoring_team = average_goals_per_game.min_by {|team, avg_goals| avg_goals}
-    @teams.each {|team| return lowest_scoring_team_name = team.team_name if team.team_id == lowest_scoring_team[0]}
-    lowest_scoring_team_name
+    team_identifier(lowest_scoring_team[0])
   end
 
   def lowest_scoring_home_team
@@ -162,8 +159,7 @@ class StatTracker
       end
     end
     lowest_scoring_team = average_goals_per_game.min_by {|team, avg_goals| avg_goals}
-    @teams.each {|team| return lowest_scoring_team_name = team.team_name if team.team_id == lowest_scoring_team[0]}
-    lowest_scoring_team_name
+    team_identifier(lowest_scoring_team[0])
   end
 
   def highest_scoring_visitor
@@ -183,9 +179,7 @@ class StatTracker
     end
     sorted_team_avg = team_and_goal_avg.sort_by { |_, value| value }
     id = sorted_team_avg.last.first
-    @teams.each do |team|
-      return team.team_name if team.team_id == id
-    end
+    team_identifier(id)
   end
 
   def highest_scoring_home_team
@@ -205,9 +199,7 @@ class StatTracker
     end
     sorted_team_avg = team_and_goal_avg.sort_by { |_, value| value }
     id = sorted_team_avg.last.first
-    @teams.each do |team|
-      return team.team_name if team.team_id == id
-    end
+    team_identifier(id)
   end
 
 #-------------- Season Statics Methods --------
@@ -235,8 +227,7 @@ def most_tackles(season_id)
   end
 
   most_tackles_id = tackles_by_team_season.max_by { |team_id, tackles| tackles }&.first
-  result = @teams.find { |team| team.team_id == most_tackles_id }
-  result.team_name
+  team_identifier(most_tackles_id)
 end
 
 
@@ -263,13 +254,11 @@ def fewest_tackles(season_id)
   end
 
   fewest_tackles_id = tackles_by_team_season.min_by { |team_id, tackles| tackles }&.first
-  result = @teams.find { |team| team.team_id == fewest_tackles_id }
-  result.team_name
+  team_identifier(fewest_tackles_id)
 end
 
-
   def most_accurate_team(season_id)
-    games_by_season = [] 
+    games_by_season = []
     @games.each { |game| games_by_season << game.game_id if (game.season == season_id)}
     games_by_season
     team_stats = []
@@ -288,12 +277,11 @@ end
   end
   most_accurate_team = average_goals_per_shot.max_by {|team, avg_goals| avg_goals}
   most_accurate_team_name = nil
-  @teams.each { |team| most_accurate_team_name = team.team_name if team.team_id == most_accurate_team[0]}
-  most_accurate_team_name
+  team_identifier(most_accurate_team[0])
   end
 
   def least_accurate_team(season_id)
-    games_by_season = [] 
+    games_by_season = []
     @games.each { |game| games_by_season << game.game_id if (game.season == season_id)}
     games_by_season
     team_stats = []
@@ -312,8 +300,7 @@ end
   end
   least_accurate_team = average_goals_per_shot.min_by {|team, avg_goals| avg_goals}
   least_accurate_team_name = nil
-  @teams.each { |team| least_accurate_team_name = team.team_name if team.team_id == least_accurate_team[0]}
-  least_accurate_team_name
+  team_identifier(least_accurate_team[0])
   end
 
   def total_goals_by_teams
@@ -361,6 +348,11 @@ end
   end
 
   #------------------------------Helper Methods---------------------------------
+
+  def team_identifier(team_id)
+    result = @teams.find { |team| team.team_id == team_id }
+    result.team_name
+  end
 end
 
 
