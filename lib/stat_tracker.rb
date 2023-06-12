@@ -443,7 +443,7 @@ end
       else
       end
     end
-    losses_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, favorite_opponent_hash|
+    wins_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, favorite_opponent_hash|
       if team_id == game.away_team_id && game.away_goals > game.home_goals
         favorite_opponent_hash[game.home_team_id] += 1
       elsif team_id == game.home_team_id && game.home_goals > game.away_goals
@@ -451,11 +451,34 @@ end
       else
       end
     end
-    favorite_opponent = find_average(losses_against_opponents, games_against_opponents).max_by {|season, win_percentage| win_percentage}
+    favorite_opponent = find_average(wins_against_opponents, games_against_opponents).max_by {|season, win_percentage| win_percentage}
     favorite_opponent[0]
     favorite_opponent_team_name = nil
     @teams.each { |team| favorite_opponent_team_name = team.team_name if team.team_id == favorite_opponent[0]}
     favorite_opponent_team_name
+  end
+
+  def head_to_head(team_id)
+    games_played_by_team = [] 
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, favorite_opponent_hash|
+      if team_id == game.away_team_id
+        favorite_opponent_hash[game.home_team_id] += 1
+      elsif team_id == game.home_team_id
+        favorite_opponent_hash[game.away_team_id] += 1
+      else
+      end
+    end
+    wins_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, favorite_opponent_hash|
+      if team_id == game.away_team_id && game.away_goals > game.home_goals
+        favorite_opponent_hash[game.home_team_id] += 1
+      elsif team_id == game.home_team_id && game.home_goals > game.away_goals
+        favorite_opponent_hash[game.away_team_id] += 1
+      else
+      end
+    end
+    average_win_percentage = find_average(wins_against_opponents, games_against_opponents)
+    p average_win_percentage
   end
 
   #------------------------------Helper Methods---------------------------------
