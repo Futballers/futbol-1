@@ -241,6 +241,14 @@ RSpec.describe StatTracker do
     it '#fewest_goals_scored' do
     expect(@stat_tracker.fewest_goals_scored("17")).to eq(1)
     end
+
+    it '#rival' do
+    expect(@stat_tracker.rival("17")).to eq("FC Dallas")
+    end
+
+    it '#favorite_opponent' do
+    expect(@stat_tracker.favorite_opponent("17")).to eq("Seattle Sounders FC")
+    end
   end
 
   describe 'helper methods' do
