@@ -69,7 +69,7 @@ RSpec.describe StatTracker do
     end
 
     it "#percentage_ties" do
-      expect(@stat_tracker.percentage_ties).to eq(0.2)
+      expect(@stat_tracker.percentage_ties).to eq(0.17)
     end
 
     it "#count_of_games_by_season" do
@@ -112,25 +112,25 @@ RSpec.describe StatTracker do
 
     it "#average_goals_by_team" do
     expected = {
-      "3"=>1.8064516129032258,
-      "6"=>2.727272727272727,
-      "5"=>1.9,
-      "17"=>1.9285714285714286,
-      "16"=>2.1379310344827585,
-      "9"=>2.1818181818181817,
-      "8"=>1.7272727272727273,
-      "30"=>1.875,
-      "26"=>2.130434782608696,
-      "19"=>1.6666666666666667,
-      "24"=>2.3529411764705883,
-      "2"=>1.8333333333333333,
-      "15"=>1.6923076923076923,
-      "20"=>1.75,
-      "14"=>1.9230769230769231,
-      "28"=>2.4,
-      "4"=>1.0,
-      "21"=>1.7142857142857142,
-      "25"=>2.5
+      "14"    =>1.9231, 
+      "15"    =>1.6923, 
+      "16"    =>2.1379, 
+      "17"    =>1.9286, 
+      "19"    =>1.6667, 
+      "2"     =>1.8333, 
+      "20"    =>1.75, 
+      "21"    =>1.7143, 
+      "24"    => 2.3529,
+      "25"    => 2.5,
+      "26"    => 2.1304,
+      "28"    =>2.4, 
+      "3"     =>1.8065, 
+      "30"    =>1.875, 
+      "4"     =>1.0, 
+      "5"     =>1.9, 
+      "6"     =>2.7273, 
+      "8"     =>1.7273, 
+      "9"     =>2.1818
     }
     expect(@stat_tracker.average_goals_by_team).to eq(expected)
     end
@@ -171,25 +171,25 @@ RSpec.describe StatTracker do
 
     it "#total_goals_by_teams" do
       expect(@stat_tracker.total_goals_by_teams).to eq({
-        "3"=>56,
-        "6"=>30,
-        "5"=>38,
-        "17"=>27,
-        "16"=>62,
-        "9"=>24,
-        "8"=>19,
-        "30"=>45,
-        "26"=>49,
-        "19"=>30,
-        "24"=>40,
-        "2"=>11,
-        "15"=>22,
-        "20"=>7,
-        "14"=>25,
-        "28"=>12,
-        "4"=>6,
-        "21"=>12,
-        "25"=>15
+        "3"   =>56,
+        "6"   =>30,
+        "5"   =>38,
+        "17"  =>27,
+        "16"  =>62,
+        "9"   =>24,
+        "8"   =>19,
+        "30"  =>45,
+        "26"  =>49,
+        "19"  =>30,
+        "24"  =>40,
+        "2"   =>11,
+        "15"  =>22,
+        "20"  =>7,
+        "14"  =>25,
+        "28"  =>12,
+        "4"   =>6,
+        "21"  =>12,
+        "25"  =>15
       })
     end
 
@@ -210,7 +210,89 @@ RSpec.describe StatTracker do
     end
   end
 
-  describe '#helper_methods' do
+
+  describe '#team_statistics' do
+    it "#team_info" do
+    expected = {
+      "abbreviation"=>"ATL", 
+      "franchise_id"=>"23", 
+      "link"        =>"/api/v1/teams/1", 
+      "team_id"     =>"1", 
+      "team_name"   =>"Atlanta United"
+    }
+    expect(@stat_tracker.team_info("1")).to eq(expected)
+    end
+
+    it '#best_season' do
+    expect(@stat_tracker.best_season("17")).to eq("20122013")
+    end
+
+    it '#worst_season' do
+    expect(@stat_tracker.worst_season("17")).to eq("20132014")
+    end
+
+    it '#average_win_percentage' do
+    expect(@stat_tracker.average_win_percentage("17")).to eq(0.56)
+    end
+
+    it '#most_goals_scored' do
+    expect(@stat_tracker.most_goals_scored("17")).to eq(3)
+    end
+
+    it '#fewest_goals_scored' do
+    expect(@stat_tracker.fewest_goals_scored("17")).to eq(1)
+    end
+
+    it '#rival' do
+    expect(@stat_tracker.rival("17")).to eq("FC Dallas")
+    end
+
+    it '#favorite_opponent' do
+    expect(@stat_tracker.favorite_opponent("17")).to eq("Seattle Sounders FC")
+    end
+
+    it '#head_to_head' do
+    expected = {
+      "16"=>0.5714, 
+      "2"=>1.0
+    }
+    expect(@stat_tracker.head_to_head("17")).to eq(expected)
+    end
+
+    it '#worst_loss' do
+    expect(@stat_tracker.worst_loss("17")).to eq(1)
+    expect(@stat_tracker.worst_loss("16")).to eq(3)
+    end
+
+    it '#biggest_blowout' do
+    expect(@stat_tracker.biggest_team_blowout("17")).to eq(3)
+    expect(@stat_tracker.biggest_team_blowout("16")).to eq(1)
+    end
+  end
+
+  describe 'helper methods' do
+    it '#find_average' do
+    smaller_hash = {
+      a: 1,
+      b: 2,
+      c: 3
+    }
+    larger_hash = {
+      a: 2,
+      b: 3,
+      c: 4
+    }
+    expected = {
+      a: 0.5,
+      b: 0.6667,
+      c: 0.75
+    }
+    expect(@stat_tracker.find_average(smaller_hash, larger_hash)).to eq(expected)
+    end
+
+    it '#calc_percentage' do
+    expect(@stat_tracker.calc_percentage(1, 2)).to eq(0.5)
+    end
 
     it 'gives array of game_ids for a specific season' do
       expect(@stat_tracker.games_by_season("20162017")).to eq(["2016030151","2016030152", "2016030153","2016030154", "2016030111"])

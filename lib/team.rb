@@ -3,7 +3,8 @@ class Team
               :franchise_id,
               :team_name,
               :abbreviation,
-              :stadium
+              :stadium,
+              :link
 
   def initialize(row)
     @team_id      = row[:team_id]
@@ -11,5 +12,6 @@ class Team
     @team_name    = row[:teamname]
     @abbreviation = row[:abbreviation]
     @stadium      = row[:stadium]
+    @link         = row[:link]
   end
 end
