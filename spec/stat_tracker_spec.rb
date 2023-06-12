@@ -257,6 +257,10 @@ RSpec.describe StatTracker do
     }
     expect(@stat_tracker.head_to_head("17")).to eq(expected)
     end
+
+    it '#worst_loss' do
+    expect(@stat_tracker.worst_loss("17")).to eq(1)
+    end
   end
 
   describe 'helper methods' do
