@@ -18,9 +18,9 @@ Dylan Timmons - https://www.linkedin.com/in/dylan-timmons-7264a116b/
                 https://github.com/DylanScotty
 
 ## Table of Contents 
-    - Establishing Group Norms Questions
-    - Links to DTR, Project Board, Github project board
-    - Retro information
+    - Group Norms
+    - Project Links
+    - Retro
 
 
 ## Group Norms
