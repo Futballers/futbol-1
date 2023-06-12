@@ -214,18 +214,14 @@ class StatTracker
 
   def most_tackles(season_id)
     tackles_by_team_season = Hash.new(0)
-
-    games_by_season = []
-    @games.each do |game|
-      games_by_season << game.game_id if game.season == season_id
-    end
-
+    games_by_season_id = games_by_season(season_id)
     teams = []
+
     @game_teams.find_all do |game|
-      teams << game.team_id if games_by_season.include?(game.game_id)
+      teams << game.team_id if games_by_season_id.include?(game.game_id)
     end
 
-    tackle_game = @game_teams.find_all { |game| games_by_season.include?(game.game_id) }
+    tackle_game = @game_teams.find_all { |game| games_by_season_id.include?(game.game_id) }
     tackle_game.each do |game|
       if tackles_by_team_season.key?(game.team_id)
         tackles_by_team_season[game.team_id] += game.tackles.to_i
@@ -243,17 +239,14 @@ class StatTracker
   def fewest_tackles(season_id)
     tackles_by_team_season = Hash.new(0)
 
-    games_by_season = []
-    @games.each do |game|
-      games_by_season << game.game_id if game.season == season_id
-    end
+    games_by_season_id = games_by_season(season_id)
 
     teams = []
     @game_teams.find_all do |game|
-      teams << game.team_id if games_by_season.include?(game.game_id)
+      teams << game.team_id if games_by_season_id.include?(game.game_id)
     end
 
-    tackle_game = @game_teams.find_all { |game| games_by_season.include?(game.game_id) }
+    tackle_game = @game_teams.find_all { |game| games_by_season_id.include?(game.game_id) }
     tackle_game.each do |game|
       if tackles_by_team_season.key?(game.team_id)
         tackles_by_team_season[game.team_id] += game.tackles.to_i
@@ -269,11 +262,9 @@ class StatTracker
 
 
   def most_accurate_team(season_id)
-    games_by_season = [] 
-    @games.each { |game| games_by_season << game.game_id if (game.season == season_id)}
-    games_by_season
+    games_by_season_id = games_by_season(season_id)
     team_stats = []
-    game_teams.find_all { |game| team_stats << game if games_by_season.include?(game.game_id)}
+    game_teams.find_all { |game| team_stats << game if games_by_season_id.include?(game.game_id)}
     total_goals_per_team = team_stats.each_with_object(Hash.new(0)) do |game, team_hash|
       team_hash[game.team_id] += game.goals.to_i
   end
@@ -293,11 +284,10 @@ class StatTracker
   end
 
   def least_accurate_team(season_id)
-    games_by_season = [] 
-    @games.each { |game| games_by_season << game.game_id if (game.season == season_id)}
-    games_by_season
+    games_by_season_id = games_by_season(season_id)
+
     team_stats = []
-    game_teams.find_all { |game| team_stats << game if games_by_season.include?(game.game_id)}
+    game_teams.find_all { |game| team_stats << game if games_by_season_id.include?(game.game_id)}
     total_goals_per_team = team_stats.each_with_object(Hash.new(0)) do |game, team_hash|
       team_hash[game.team_id] += game.goals.to_i
   end
@@ -329,33 +319,28 @@ class StatTracker
   end
 
   def winningest_coach(season_id)
-    games_by_season = []
-    @games.each do |game|
-      games_by_season << game.game_id if (game.season == season_id)
-    end
+    games_by_season_id = games_by_season(season_id)
+
     coachs = []
     @game_teams.find_all do |game|
-      coachs << game.head_coach if games_by_season.include?(game.game_id)
+      coachs << game.head_coach if games_by_season_id.include?(game.game_id)
     end
     coachs.uniq.max_by do |coach|
-      coach_wins = @game_teams.find_all {|game|  (game.head_coach == coach) && (game.result == "WIN") && (games_by_season.include?(game.game_id))}
-      coach_games = @game_teams.find_all {|game| (game.head_coach == coach) && (games_by_season.include?(game.game_id))}
+      coach_wins = @game_teams.find_all {|game|  (game.head_coach == coach) && (game.result == "WIN") && (games_by_season_id.include?(game.game_id))}
+      coach_games = @game_teams.find_all {|game| (game.head_coach == coach) && (games_by_season_id.include?(game.game_id))}
       (coach_wins.count.to_f / coach_games.count.to_f).round(2)
     end
   end
 
   def worst_coach(season_id)
-    games_by_season = []
-    @games.each do |game|
-      games_by_season << game.game_id if (game.season == season_id)
-    end
+    games_by_season_ids = games_by_season(season_id)
     coachs = []
     @game_teams.find_all do |game|
-      coachs << game.head_coach if games_by_season.include?(game.game_id)
+      coachs << game.head_coach if games_by_season_ids.include?(game.game_id)
     end
     coachs.uniq.min_by do |coach|
-      coach_wins = @game_teams.find_all {|game|  (game.head_coach == coach) && (game.result == "WIN") && (games_by_season.include?(game.game_id))}
-      coach_games = @game_teams.find_all {|game| (game.head_coach == coach) && (games_by_season.include?(game.game_id))}
+      coach_wins = @game_teams.find_all {|game|  (game.head_coach == coach) && (game.result == "WIN") && (games_by_season_ids.include?(game.game_id))}
+      coach_games = @game_teams.find_all {|game| (game.head_coach == coach) && (games_by_season_ids.include?(game.game_id))}
       (coach_wins.count.to_f / coach_games.count.to_f).round(2)
     end
   end
