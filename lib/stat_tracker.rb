@@ -121,13 +121,7 @@ class StatTracker
   def average_goals_by_team
     goals_scored = @game_teams.each_with_object(Hash.new(0)) {|game, team_hash| team_hash[game.team_id] += game.goals.to_i}
     games_played = @game_teams.each_with_object(Hash.new(0)) {|game, team_hash| team_hash[game.team_id] += 1}
-    average_goals_per_game = Hash.new(0)
-    goals_scored.each do |key1, value1|
-      games_played.each do |key2, value2|
-          average_goals_per_game[key1] = value1.to_f / value2.to_f if key1 == key2
-      end
-    end
-    average_goals_per_game
+    find_average(goals_scored, games_played)
   end
 
   def lowest_scoring_visitor
@@ -137,13 +131,7 @@ class StatTracker
     games_played_as_visitor = @game_teams.each_with_object(Hash.new(0)) do |game, team_hash|
         team_hash[game.team_id] += 1 if game.hoa == "away"
     end
-    average_goals_per_game = Hash.new(0)
-    goals_scored_as_visitor.each do |key1, value1|
-      games_played_as_visitor.each do |key2, value2|
-          average_goals_per_game[key1] = value1.to_f / value2.to_f if key1 == key2
-      end
-    end
-    lowest_scoring_team = average_goals_per_game.min_by {|team, avg_goals| avg_goals}
+    lowest_scoring_team = find_average(goals_scored_as_visitor, games_played_as_visitor).min_by {|team, avg_goals| avg_goals}
     @teams.each {|team| return lowest_scoring_team_name = team.team_name if team.team_id == lowest_scoring_team[0]}
     lowest_scoring_team_name
   end
@@ -155,13 +143,7 @@ class StatTracker
     games_played_at_home = @game_teams.each_with_object(Hash.new(0)) do |game, team_hash|
         team_hash[game.team_id] += 1 if game.hoa == "home"
     end
-    average_goals_per_game = Hash.new(0)
-    goals_scored_at_home.each do |key1, value1|
-      games_played_at_home.each do |key2, value2|
-          average_goals_per_game[key1] = value1.to_f / value2.to_f if key1 == key2
-      end
-    end
-    lowest_scoring_team = average_goals_per_game.min_by {|team, avg_goals| avg_goals}
+    lowest_scoring_team = find_average(goals_scored_at_home, games_played_at_home).min_by {|team, avg_goals| avg_goals}
     @teams.each {|team| return lowest_scoring_team_name = team.team_name if team.team_id == lowest_scoring_team[0]}
     lowest_scoring_team_name
   end
@@ -261,7 +243,6 @@ def fewest_tackles(season_id)
       tackles_by_team_season[game.team_id] = game.tackles.to_i
     end
   end
-
   fewest_tackles_id = tackles_by_team_season.min_by { |team_id, tackles| tackles }&.first
   result = @teams.find { |team| team.team_id == fewest_tackles_id }
   result.team_name
@@ -280,13 +261,7 @@ end
     total_shots_per_team = team_stats.each_with_object(Hash.new(0)) do |game, team_hash|
       team_hash[game.team_id] += game.shots.to_i
   end
-  average_goals_per_shot = Hash.new(0)
-  total_goals_per_team.each do |key1, value1|
-    total_shots_per_team.each do |key2, value2|
-        average_goals_per_shot[key1] = value1.to_f / value2.to_f if key1 == key2
-    end
-  end
-  most_accurate_team = average_goals_per_shot.max_by {|team, avg_goals| avg_goals}
+  most_accurate_team = find_average(total_goals_per_team, total_shots_per_team).max_by {|team, avg_goals| avg_goals}
   most_accurate_team_name = nil
   @teams.each { |team| most_accurate_team_name = team.team_name if team.team_id == most_accurate_team[0]}
   most_accurate_team_name
@@ -304,13 +279,7 @@ end
     total_shots_per_team = team_stats.each_with_object(Hash.new(0)) do |game, team_hash|
       team_hash[game.team_id] += game.shots.to_i
   end
-  average_goals_per_shot = Hash.new(0)
-  total_goals_per_team.each do |key1, value1|
-    total_shots_per_team.each do |key2, value2|
-        average_goals_per_shot[key1] = value1.to_f / value2.to_f if key1 == key2
-    end
-  end
-  least_accurate_team = average_goals_per_shot.min_by {|team, avg_goals| avg_goals}
+  least_accurate_team = find_average(total_goals_per_team, total_shots_per_team).min_by {|team, avg_goals| avg_goals}
   least_accurate_team_name = nil
   @teams.each { |team| least_accurate_team_name = team.team_name if team.team_id == least_accurate_team[0]}
   least_accurate_team_name
@@ -389,12 +358,7 @@ end
     total_games_per_season = games_played_by_team.each_with_object(Hash.new(0)) do |game, season_hash|
       season_hash[game.season] += 1
     end
-    percentage_wins_by_season = Hash.new(0)
-    wins_by_season.each do |key1, value1|
-      total_games_per_season.each {|key2, value2| percentage_wins_by_season[key1] = value1.to_f / value2.to_f if key1 == key2}
-    end
-    percentage_wins_by_season
-    best_season = percentage_wins_by_season.max_by {|season, win_percentage| win_percentage}
+    best_season = find_average(wins_by_season, total_games_per_season).max_by {|season, win_percentage| win_percentage}
     best_season[0]
   end
 
@@ -412,14 +376,7 @@ end
     total_games_per_season = games_played_by_team.each_with_object(Hash.new(0)) do |game, season_hash|
       season_hash[game.season] += 1
     end
-    percentage_wins_by_season = Hash.new(0)
-    wins_by_season.each do |key1, value1|
-      total_games_per_season.each do |key2, value2|
-        percentage_wins_by_season[key1] = value1.to_f / value2.to_f if key1 == key2
-      end
-    end
-    percentage_wins_by_season
-    worst_season = percentage_wins_by_season.min_by {|season, win_percentage| win_percentage}
+    worst_season = find_average(wins_by_season, total_games_per_season).min_by {|season, win_percentage| win_percentage}
     worst_season[0]
   end
 
@@ -444,6 +401,18 @@ end
   end
 
   #------------------------------Helper Methods---------------------------------
+
+  def find_average(smaller_hash, larger_hash)
+    average = Hash.new(0)
+    smaller_hash.each do |key1, value1|
+      larger_hash.each do |key2, value2|
+        average[key1] = value1.to_f / value2.to_f if key1 == key2
+      end
+    end
+    average.each { |key, value| average[key] = value.round(4) }
+    average
+  end
+
 end
 
 
