@@ -234,4 +234,25 @@ RSpec.describe StatTracker do
     expect(@stat_tracker.average_win_percentage("17")).to eq(0.56)
     end
   end
+
+  describe 'helper methods' do
+    it '#find_average' do
+    smaller_hash = {
+      a: 1,
+      b: 2,
+      c: 3
+    }
+    larger_hash = {
+      a: 2,
+      b: 3,
+      c: 4
+    }
+    expected = {
+      a: 0.5,
+      b: 0.67,
+      c: 0.75
+    }
+    expect(@stat_tracker.find_average(smaller_hash, larger_hash)).to eq(expected)
+    end
+  end
 end
