@@ -18,8 +18,9 @@ Dylan Timmons - https://www.linkedin.com/in/dylan-timmons-7264a116b/
                 https://github.com/DylanScotty
 
 ## Table of Contents 
-    - Establishing Group Norms Questions
-    - Links to DTR, Project Board, Github project board
+    - Group Norms
+    - Project Links
+    - Retro
 
 
 ## Group Norms
@@ -37,3 +38,16 @@ Freeform Board
 
 Github Project Board
     https://github.com/orgs/Futballers/projects/2/views/1
+
+Retro Board 
+    https://easyretro.io/publicboard/aOzrcMtRlXNaIOQHUwFzFHztvrs2/1938fb3b-9a18-41f2-a7c6-419aacd803d5
+
+## Retro
+    Things that went well
+        1. Communication
+        2. Structure and planning
+        3. Time management
+    Areas of improvement
+        1. Thoroughness to instructions
+        2. Syntax
+        3. Could slightly optimize workflow / number of commits per person
