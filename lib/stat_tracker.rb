@@ -383,6 +383,7 @@ end
         season_hash[game.season] += 1
       elsif game.home_team_id == team_id && game.home_goals > game.away_goals
         season_hash[game.season] += 1
+      else
       end
     end
     total_games_per_season = games_played_by_team.each_with_object(Hash.new(0)) do |game, season_hash|
@@ -390,9 +391,7 @@ end
     end
     percentage_wins_by_season = Hash.new(0)
     wins_by_season.each do |key1, value1|
-      total_games_per_season.each do |key2, value2|
-        percentage_wins_by_season[key1] = value1.to_f / value2.to_f if key1 == key2
-      end
+      total_games_per_season.each {|key2, value2| percentage_wins_by_season[key1] = value1.to_f / value2.to_f if key1 == key2}
     end
     percentage_wins_by_season
     best_season = percentage_wins_by_season.max_by {|season, win_percentage| win_percentage}
