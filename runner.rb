@@ -11,4 +11,4 @@ locations = {
 stat_tracker = StatTracker.new(locations)
 
 
-stat_tracker.head_to_head("17")
+stat_tracker.worst_loss("16")

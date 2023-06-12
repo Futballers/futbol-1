@@ -486,28 +486,33 @@ end
     difference = 0
     games_played_by_team = [] 
     @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
-    games_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, favorite_opponent_hash|
-      if team_id == game.away_team_id
-        favorite_opponent_hash[game.home_team_id] += 1
-      elsif team_id == game.home_team_id
-        favorite_opponent_hash[game.away_team_id] += 1
-      else
-      end
-    end
     games_played_by_team.each do |game|
       if team_id == game.away_team_id && game.away_goals.to_i < game.home_goals.to_i
         difference = game.home_goals.to_i - game.away_goals.to_i
-      elsif team_id == game.home_team_id && game.home_goals.to_i > game.away_goals.to_i
+      elsif team_id == game.home_team_id && game.home_goals.to_i < game.away_goals.to_i
         difference = game.away_goals.to_i - game.home_goals.to_i
       else
       end
-        worst_loss = difference if difference > worst_loss
+      worst_loss = difference if difference > worst_loss
     end
     worst_loss
   end
 
   def biggest_team_blowout(team_id)
-
+    biggest_blowout = 0
+    difference = 0
+    games_played_by_team = [] 
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_played_by_team.each do |game|
+      if team_id == game.away_team_id && game.away_goals.to_i > game.home_goals.to_i
+        difference = game.away_goals.to_i - game.home_goals.to_i
+      elsif team_id == game.home_team_id && game.home_goals.to_i > game.away_goals.to_i
+        difference = game.home_goals.to_i - game.away_goals.to_i
+      else
+      end
+      biggest_blowout = difference if difference > biggest_blowout
+    end
+    biggest_blowout
   end
 
   #------------------------------Helper Methods---------------------------------
