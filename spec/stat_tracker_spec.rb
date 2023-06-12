@@ -292,6 +292,7 @@ RSpec.describe StatTracker do
 
     it '#calc_percentage' do
     expect(@stat_tracker.calc_percentage(1, 2)).to eq(0.5)
+    end
 
     it 'gives array of game_ids for a specific season' do
       expect(@stat_tracker.games_by_season("20162017")).to eq(["2016030151","2016030152", "2016030153","2016030154", "2016030111"])

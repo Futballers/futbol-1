@@ -294,6 +294,7 @@ end
   end
 
   def worst_coach(season_id)
+    games_by_season_ids = []
     games_by_season_ids = games_by_season(season_id)
     coachs = []
     @game_teams.find_all do |game|
@@ -301,8 +302,8 @@ end
     end
     coachs.uniq.min_by do |coach|
 
-      coach_wins = @game_teams.find_all {|game|  (game.head_coach == coach) && (game.result == "WIN") && (games_by_season_id.include?(game.game_id))}
-      coach_games = @game_teams.find_all {|game| (game.head_coach == coach) && (games_by_season_id.include?(game.game_id))}
+      coach_wins = @game_teams.find_all {|game|  (game.head_coach == coach) && (game.result == "WIN") && (games_by_season_ids.include?(game.game_id))}
+      coach_games = @game_teams.find_all {|game| (game.head_coach == coach) && (games_by_season_ids.include?(game.game_id))}
       calc_percentage(coach_wins.count, coach_games.count)
     end
   end
