@@ -209,4 +209,12 @@ RSpec.describe StatTracker do
       expect(@stat_tracker.worst_coach("20122013")).to eq("John Tortorella")
     end
   end
+
+  describe "#helper_methods" do
+    it "#team_identifier" do
+      id = "8"
+
+      expect(@stat_tracker.team_identifier(id)).to eq("New York Red Bulls")
+    end
+  end
 end
