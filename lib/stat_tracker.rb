@@ -423,6 +423,26 @@ end
     worst_season[0]
   end
 
+  def average_win_percentage(team_id)
+    games_played_by_team = [] 
+    wins = 0
+    games_played = 0
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_played_by_team.each do |game|
+      if game.away_team_id == team_id && game.away_goals > game.home_goals
+        wins += 1
+        games_played += 1
+      elsif game.home_team_id == team_id && game.home_goals > game.away_goals
+        wins += 1
+        games_played += 1
+      else
+        games_played += 1
+      end
+    end
+    average_win_percentage = (wins.to_f / games_played.to_f).round(2)
+    average_win_percentage
+  end
+
   #------------------------------Helper Methods---------------------------------
 end
 
