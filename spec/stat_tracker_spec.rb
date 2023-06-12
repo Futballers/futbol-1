@@ -2,9 +2,9 @@ require 'spec_helper.rb'
 
 RSpec.describe StatTracker do
   before do
-    games_test_csv = './spec/feature/game_test.csv'
-    game_teams_test_csv = './spec/feature/game_team_test.csv'
-    team_test_csv = './spec/feature/team_test.csv'
+    games_test_csv = './spec/fixture/game_test.csv'
+    game_teams_test_csv = './spec/fixture/game_team_test.csv'
+    team_test_csv = './spec/fixture/team_test.csv'
 
     @locations = {
       games: games_test_csv,
@@ -210,6 +210,7 @@ RSpec.describe StatTracker do
     end
   end
 
+
   describe '#team_statistics' do
     it "#team_info" do
     expected = {
@@ -291,6 +292,16 @@ RSpec.describe StatTracker do
 
     it '#calc_percentage' do
     expect(@stat_tracker.calc_percentage(1, 2)).to eq(0.5)
+
+    it 'gives array of game_ids for a specific season' do
+      expect(@stat_tracker.games_by_season("20162017")).to eq(["2016030151","2016030152", "2016030153","2016030154", "2016030111"])
+    end
+
+    it "#team_identifier" do
+      
+      id = "8"
+
+      expect(@stat_tracker.team_identifier(id)).to eq("New York Red Bulls")
     end
   end
 end
