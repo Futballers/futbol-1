@@ -260,6 +260,12 @@ RSpec.describe StatTracker do
 
     it '#worst_loss' do
     expect(@stat_tracker.worst_loss("17")).to eq(1)
+    expect(@stat_tracker.worst_loss("16")).to eq(3)
+    end
+
+    it '#biggest_blowout' do
+    expect(@stat_tracker.biggest_team_blowout("17")).to eq(3)
+    expect(@stat_tracker.biggest_team_blowout("16")).to eq(1)
     end
   end
 
