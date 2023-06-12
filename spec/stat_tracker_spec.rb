@@ -249,6 +249,14 @@ RSpec.describe StatTracker do
     it '#favorite_opponent' do
     expect(@stat_tracker.favorite_opponent("17")).to eq("Seattle Sounders FC")
     end
+
+    it '#head_to_head' do
+    expected = {
+      "16"=>0.5714, 
+      "2"=>1.0
+    }
+    expect(@stat_tracker.head_to_head("17")).to eq(expected)
+    end
   end
 
   describe 'helper methods' do
