@@ -212,60 +212,60 @@ class StatTracker
 
 #-------------- Season Statics Methods --------
 
-def most_tackles(season_id)
-  tackles_by_team_season = Hash.new(0)
+  def most_tackles(season_id)
+    tackles_by_team_season = Hash.new(0)
 
-  games_by_season = []
-  @games.each do |game|
-    games_by_season << game.game_id if game.season == season_id
-  end
-
-  teams = []
-  @game_teams.find_all do |game|
-    teams << game.team_id if games_by_season.include?(game.game_id)
-  end
-
-  tackle_game = @game_teams.find_all { |game| games_by_season.include?(game.game_id) }
-  tackle_game.each do |game|
-    if tackles_by_team_season.key?(game.team_id)
-      tackles_by_team_season[game.team_id] += game.tackles.to_i
-    else
-      tackles_by_team_season[game.team_id] = game.tackles.to_i
+    games_by_season = []
+    @games.each do |game|
+      games_by_season << game.game_id if game.season == season_id
     end
-  end
 
-  most_tackles_id = tackles_by_team_season.max_by { |team_id, tackles| tackles }&.first
-  result = @teams.find { |team| team.team_id == most_tackles_id }
-  result.team_name
-end
-
-
-def fewest_tackles(season_id)
-  tackles_by_team_season = Hash.new(0)
-
-  games_by_season = []
-  @games.each do |game|
-    games_by_season << game.game_id if game.season == season_id
-  end
-
-  teams = []
-  @game_teams.find_all do |game|
-    teams << game.team_id if games_by_season.include?(game.game_id)
-  end
-
-  tackle_game = @game_teams.find_all { |game| games_by_season.include?(game.game_id) }
-  tackle_game.each do |game|
-    if tackles_by_team_season.key?(game.team_id)
-      tackles_by_team_season[game.team_id] += game.tackles.to_i
-    else
-      tackles_by_team_season[game.team_id] = game.tackles.to_i
+    teams = []
+    @game_teams.find_all do |game|
+      teams << game.team_id if games_by_season.include?(game.game_id)
     end
+
+    tackle_game = @game_teams.find_all { |game| games_by_season.include?(game.game_id) }
+    tackle_game.each do |game|
+      if tackles_by_team_season.key?(game.team_id)
+        tackles_by_team_season[game.team_id] += game.tackles.to_i
+      else
+        tackles_by_team_season[game.team_id] = game.tackles.to_i
+      end
+    end
+
+    most_tackles_id = tackles_by_team_season.max_by { |team_id, tackles| tackles }&.first
+    result = @teams.find { |team| team.team_id == most_tackles_id }
+    result.team_name
   end
 
-  fewest_tackles_id = tackles_by_team_season.min_by { |team_id, tackles| tackles }&.first
-  result = @teams.find { |team| team.team_id == fewest_tackles_id }
-  result.team_name
-end
+
+  def fewest_tackles(season_id)
+    tackles_by_team_season = Hash.new(0)
+
+    games_by_season = []
+    @games.each do |game|
+      games_by_season << game.game_id if game.season == season_id
+    end
+
+    teams = []
+    @game_teams.find_all do |game|
+      teams << game.team_id if games_by_season.include?(game.game_id)
+    end
+
+    tackle_game = @game_teams.find_all { |game| games_by_season.include?(game.game_id) }
+    tackle_game.each do |game|
+      if tackles_by_team_season.key?(game.team_id)
+        tackles_by_team_season[game.team_id] += game.tackles.to_i
+      else
+        tackles_by_team_season[game.team_id] = game.tackles.to_i
+      end
+    end
+
+    fewest_tackles_id = tackles_by_team_season.min_by { |team_id, tackles| tackles }&.first
+    result = @teams.find { |team| team.team_id == fewest_tackles_id }
+    result.team_name
+  end
 
 
   def most_accurate_team(season_id)
@@ -361,6 +361,14 @@ end
   end
 
   #------------------------------Helper Methods---------------------------------
+
+  def games_by_season(season_id)
+    game_ids = []
+    @games.each do |game|
+      game_ids << game.game_id if (game.season == season_id)
+    end
+    game_ids
+  end
 end
 
 

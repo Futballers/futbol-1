@@ -2,9 +2,9 @@ require 'spec_helper.rb'
 
 RSpec.describe StatTracker do
   before do
-    games_test_csv = './spec/feature/game_test.csv'
-    game_teams_test_csv = './spec/feature/game_team_test.csv'
-    team_test_csv = './spec/feature/team_test.csv'
+    games_test_csv = './spec/fixture/game_test.csv'
+    game_teams_test_csv = './spec/fixture/game_team_test.csv'
+    team_test_csv = './spec/fixture/team_test.csv'
 
     @locations = {
       games: games_test_csv,
@@ -207,6 +207,12 @@ RSpec.describe StatTracker do
 
     it 'checks worst coach' do
       expect(@stat_tracker.worst_coach("20122013")).to eq("John Tortorella")
+    end
+  end
+
+  describe '#helper_methods' do
+    it 'gives array of game_ids for a specific season' do
+      expect(@stat_tracker.games_by_season("20162017")).to eq(["2016030151","2016030152", "2016030153","2016030154", "2016030111"])
     end
   end
 end
