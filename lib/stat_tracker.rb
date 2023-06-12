@@ -374,6 +374,56 @@ end
     team_info
   end
 
+  def best_season(team_id)
+    games_played_by_team = [] 
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_played_by_team
+    wins_by_season = games_played_by_team.each_with_object(Hash.new(0)) do |game, season_hash|
+      if game.away_team_id == team_id && game.away_goals > game.home_goals
+        season_hash[game.season] += 1
+      elsif game.home_team_id == team_id && game.home_goals > game.away_goals
+        season_hash[game.season] += 1
+      end
+    end
+    total_games_per_season = games_played_by_team.each_with_object(Hash.new(0)) do |game, season_hash|
+      season_hash[game.season] += 1
+    end
+    percentage_wins_by_season = Hash.new(0)
+    wins_by_season.each do |key1, value1|
+      total_games_per_season.each do |key2, value2|
+        percentage_wins_by_season[key1] = value1.to_f / value2.to_f if key1 == key2
+      end
+    end
+    percentage_wins_by_season
+    best_season = percentage_wins_by_season.max_by {|season, win_percentage| win_percentage}
+    best_season[0]
+  end
+
+  def worst_season(team_id)
+    games_played_by_team = [] 
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_played_by_team
+    wins_by_season = games_played_by_team.each_with_object(Hash.new(0)) do |game, season_hash|
+      if game.away_team_id == team_id && game.away_goals > game.home_goals
+        season_hash[game.season] += 1
+      elsif game.home_team_id == team_id && game.home_goals > game.away_goals
+        season_hash[game.season] += 1
+      end
+    end
+    total_games_per_season = games_played_by_team.each_with_object(Hash.new(0)) do |game, season_hash|
+      season_hash[game.season] += 1
+    end
+    percentage_wins_by_season = Hash.new(0)
+    wins_by_season.each do |key1, value1|
+      total_games_per_season.each do |key2, value2|
+        percentage_wins_by_season[key1] = value1.to_f / value2.to_f if key1 == key2
+      end
+    end
+    percentage_wins_by_season
+    worst_season = percentage_wins_by_season.min_by {|season, win_percentage| win_percentage}
+    worst_season[0]
+  end
+
   #------------------------------Helper Methods---------------------------------
 end
 
