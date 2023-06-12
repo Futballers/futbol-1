@@ -254,5 +254,9 @@ RSpec.describe StatTracker do
     }
     expect(@stat_tracker.find_average(smaller_hash, larger_hash)).to eq(expected)
     end
+
+    it '#calc_percentage' do
+    expect(@stat_tracker.calc_percentage(1, 2)).to eq(0.5)
+    end
   end
 end
