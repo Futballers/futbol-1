@@ -29,13 +29,11 @@ class StatTracker
 #---------Game Statics Methods-----------
   def percentage_ties
     tie_count = @games.count { |game| game.away_goals.to_i == game.home_goals.to_i }
-    percentage = (tie_count.to_f / @games.count.to_f).round(1)
-    percentage
+    calc_percentage(tie_count, @games.count)
   end
 
   def count_of_games_by_season
-  season_games = @games.each_with_object(Hash.new(0)) {|game, hash| hash[game.season] += 1}
-  season_games
+    season_games = @games.each_with_object(Hash.new(0)) {|game, hash| hash[game.season] += 1}
   end
 
   def highest_total_score
@@ -57,26 +55,19 @@ class StatTracker
   end
 
   def percentage_visitor_wins
-    away_wins = @games.find_all do |game|
-      (game.away_goals.to_i > game.home_goals.to_i)
-    end
-    (away_wins.count.to_f / @games.count.to_f).round(2)
+    away_wins = @games.find_all { |game| (game.away_goals.to_i > game.home_goals.to_i)}
+    calc_percentage(away_wins.count, @games.count)
   end
 
   def average_goals_per_game
     total_goals = 0
-    @games.each do |game|
-      total_goals += (game.away_goals.to_i + game.home_goals.to_i)
-    end
-    (total_goals.to_f / @games.count.to_f).round(2)
+    @games.each  {|game| total_goals += (game.away_goals.to_i + game.home_goals.to_i)}
+    calc_percentage(total_goals, @games.count)
   end
 
   def percentage_home_wins
-    home_wins = @games.find_all do |game|
-      game.home_goals > game.away_goals
-    end
-    result = (home_wins.count.to_f / @games.count.to_f)
-    result.round(2)
+    home_wins = @games.find_all {|game| game.home_goals > game.away_goals}
+    calc_percentage(home_wins.count, @games.count)
   end
 
   def average_goals_by_season
@@ -84,19 +75,14 @@ class StatTracker
     @games.each do |game|
       away = game.away_goals.to_i
       home = game.home_goals.to_i
-
       if goals_by_season.key?(game.season)
         goals_by_season[game.season] += (away + home)
       else
         goals_by_season[game.season] = away + home
       end
     end
-
     average_goals_by_s = {}
-    goals_by_season.each do |key, value|
-      average_goals_by_s[key] = (value.to_f / count_of_games_by_season[key]).round(2)
-    end
-
+    goals_by_season.each {|key, value| average_goals_by_s[key] = calc_percentage(value, count_of_games_by_season[key])}
     average_goals_by_s
   end
 #-------------- League Statics Methods --------
@@ -196,17 +182,14 @@ class StatTracker
 
 def most_tackles(season_id)
   tackles_by_team_season = Hash.new(0)
-
   games_by_season = []
   @games.each do |game|
     games_by_season << game.game_id if game.season == season_id
   end
-
   teams = []
   @game_teams.find_all do |game|
     teams << game.team_id if games_by_season.include?(game.game_id)
   end
-
   tackle_game = @game_teams.find_all { |game| games_by_season.include?(game.game_id) }
   tackle_game.each do |game|
     if tackles_by_team_season.key?(game.team_id)
@@ -215,26 +198,21 @@ def most_tackles(season_id)
       tackles_by_team_season[game.team_id] = game.tackles.to_i
     end
   end
-
   most_tackles_id = tackles_by_team_season.max_by { |team_id, tackles| tackles }&.first
   result = @teams.find { |team| team.team_id == most_tackles_id }
   result.team_name
 end
 
-
 def fewest_tackles(season_id)
   tackles_by_team_season = Hash.new(0)
-
   games_by_season = []
   @games.each do |game|
     games_by_season << game.game_id if game.season == season_id
   end
-
   teams = []
   @game_teams.find_all do |game|
     teams << game.team_id if games_by_season.include?(game.game_id)
   end
-
   tackle_game = @game_teams.find_all { |game| games_by_season.include?(game.game_id) }
   tackle_game.each do |game|
     if tackles_by_team_season.key?(game.team_id)
@@ -248,11 +226,9 @@ def fewest_tackles(season_id)
   result.team_name
 end
 
-
   def most_accurate_team(season_id)
     games_by_season = [] 
     @games.each { |game| games_by_season << game.game_id if (game.season == season_id)}
-    games_by_season
     team_stats = []
     game_teams.find_all { |game| team_stats << game if games_by_season.include?(game.game_id)}
     total_goals_per_team = team_stats.each_with_object(Hash.new(0)) do |game, team_hash|
@@ -270,19 +246,18 @@ end
   def least_accurate_team(season_id)
     games_by_season = [] 
     @games.each { |game| games_by_season << game.game_id if (game.season == season_id)}
-    games_by_season
     team_stats = []
     game_teams.find_all { |game| team_stats << game if games_by_season.include?(game.game_id)}
     total_goals_per_team = team_stats.each_with_object(Hash.new(0)) do |game, team_hash|
       team_hash[game.team_id] += game.goals.to_i
-  end
+    end
     total_shots_per_team = team_stats.each_with_object(Hash.new(0)) do |game, team_hash|
       team_hash[game.team_id] += game.shots.to_i
-  end
-  least_accurate_team = find_average(total_goals_per_team, total_shots_per_team).min_by {|team, avg_goals| avg_goals}
-  least_accurate_team_name = nil
-  @teams.each { |team| least_accurate_team_name = team.team_name if team.team_id == least_accurate_team[0]}
-  least_accurate_team_name
+    end
+    least_accurate_team = find_average(total_goals_per_team, total_shots_per_team).min_by {|team, avg_goals| avg_goals}
+    least_accurate_team_name = nil
+    @teams.each { |team| least_accurate_team_name = team.team_name if team.team_id == least_accurate_team[0]}
+    least_accurate_team_name
   end
 
   def total_goals_by_teams
@@ -309,7 +284,7 @@ end
     coachs.uniq.max_by do |coach|
       coach_wins = @game_teams.find_all {|game|  (game.head_coach == coach) && (game.result == "WIN") && (games_by_season.include?(game.game_id))}
       coach_games = @game_teams.find_all {|game| (game.head_coach == coach) && (games_by_season.include?(game.game_id))}
-      (coach_wins.count.to_f / coach_games.count.to_f).round(2)
+      calc_percentage(coach_wins.count, coach_games.count)
     end
   end
 
@@ -325,7 +300,7 @@ end
     coachs.uniq.min_by do |coach|
       coach_wins = @game_teams.find_all {|game|  (game.head_coach == coach) && (game.result == "WIN") && (games_by_season.include?(game.game_id))}
       coach_games = @game_teams.find_all {|game| (game.head_coach == coach) && (games_by_season.include?(game.game_id))}
-      (coach_wins.count.to_f / coach_games.count.to_f).round(2)
+      calc_percentage(coach_wins.count, coach_games.count)
     end
   end
 
@@ -396,8 +371,7 @@ end
         games_played += 1
       end
     end
-    average_win_percentage = (wins.to_f / games_played.to_f).round(2)
-    average_win_percentage
+    calc_percentage(wins, games_played)
   end
 
   #------------------------------Helper Methods---------------------------------
@@ -413,6 +387,9 @@ end
     average
   end
 
+  def calc_percentage(val1, val2)
+    (val1.to_f / val2.to_f).round(2)
+  end
 end
 
 
