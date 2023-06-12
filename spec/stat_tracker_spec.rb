@@ -209,4 +209,25 @@ RSpec.describe StatTracker do
       expect(@stat_tracker.worst_coach("20122013")).to eq("John Tortorella")
     end
   end
+
+  describe '#team_statistics' do
+    it "#team_info" do
+    expected = {
+      "abbreviation"=>"ATL", 
+      "franchise_id"=>"23", 
+      "link"        =>"/api/v1/teams/1", 
+      "team_id"     =>"1", 
+      "team_name"   =>"Atlanta United"
+    }
+    expect(@stat_tracker.team_info("1")).to eq(expected)
+    end
+
+    it '#best_season' do
+    expect(@stat_tracker.best_season("17")).to eq("20122013")
+    end
+
+    it '#worst_season' do
+    expect(@stat_tracker.worst_season("17")).to eq("20132014")
+    end
+  end
 end
