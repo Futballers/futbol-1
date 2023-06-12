@@ -406,6 +406,58 @@ end
     fewest_home_goals < fewest_away_goals ? fewest_home_goals : fewest_away_goals
   end
 
+  def rival(team_id)
+    games_played_by_team = [] 
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, rival_hash|
+      if team_id == game.away_team_id
+        rival_hash[game.home_team_id] += 1
+      elsif team_id == game.home_team_id
+        rival_hash[game.away_team_id] += 1
+      else
+      end
+    end
+    losses_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, rival_hash|
+      if team_id == game.away_team_id && game.away_goals < game.home_goals
+        rival_hash[game.home_team_id] += 1
+      elsif team_id == game.home_team_id && game.home_goals < game.away_goals
+        rival_hash[game.away_team_id] += 1
+      else
+      end
+    end
+    rival = find_average(losses_against_opponents, games_against_opponents).max_by {|season, win_percentage| win_percentage}
+    rival[0]
+    rival_team_name = nil
+    @teams.each { |team| rival_team_name = team.team_name if team.team_id == rival[0]}
+    rival_team_name
+  end
+
+  def favorite_opponent(team_id)
+    games_played_by_team = [] 
+    @games.each { |game| games_played_by_team << game if game.away_team_id == team_id || game.home_team_id == team_id}
+    games_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, favorite_opponent_hash|
+      if team_id == game.away_team_id
+        favorite_opponent_hash[game.home_team_id] += 1
+      elsif team_id == game.home_team_id
+        favorite_opponent_hash[game.away_team_id] += 1
+      else
+      end
+    end
+    losses_against_opponents = games_played_by_team.each_with_object(Hash.new(0)) do |game, favorite_opponent_hash|
+      if team_id == game.away_team_id && game.away_goals > game.home_goals
+        favorite_opponent_hash[game.home_team_id] += 1
+      elsif team_id == game.home_team_id && game.home_goals > game.away_goals
+        favorite_opponent_hash[game.away_team_id] += 1
+      else
+      end
+    end
+    favorite_opponent = find_average(losses_against_opponents, games_against_opponents).max_by {|season, win_percentage| win_percentage}
+    favorite_opponent[0]
+    favorite_opponent_team_name = nil
+    @teams.each { |team| favorite_opponent_team_name = team.team_name if team.team_id == favorite_opponent[0]}
+    favorite_opponent_team_name
+  end
+
   #------------------------------Helper Methods---------------------------------
 
   def find_average(smaller_hash, larger_hash)
